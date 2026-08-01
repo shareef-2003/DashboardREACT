@@ -1,0 +1,23 @@
+export const endpoints = {
+  adminLogin: "/api/admin/login",
+  adminChangePassword: "/api/admin/change-password",
+  adminLogout: "/api/admin/logout",
+  providers: "/api/admin/service-providers",
+  providerDetails: "/api/admin/service-provider",
+  pendingProviders: "/api/admin/service-providers-pending",
+  mostComplained: "/api/admin/most-complained", 
+  
+
+
+  users: "/users",
+  orders: "/orders",
+  reports: "/reports",
+  categories: "/categories",
+  reviews: "/reviews",
+  notifications: "/notifications",
+  support: "/support",
+  subscriptions: "/subscriptions",
+  verification: "/verification",
+  offers: "/offers",
+  moderation: "/moderation",
+};
