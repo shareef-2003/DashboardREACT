@@ -5,9 +5,9 @@ export const endpoints = {
   providers: "/api/admin/service-providers",
   providerDetails: "/api/admin/service-provider",
   pendingProviders: "/api/admin/service-providers-pending",
-  mostComplained: "/api/admin/most-complained", 
-  
-
+  mostComplained: "/api/admin/most-complained",
+  customers: "/api/admin/customers",
+  serviceProvidersBlocked: "/api/admin/service-providers-blocked",
 
   users: "/users",
   orders: "/orders",

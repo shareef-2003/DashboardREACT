@@ -35,6 +35,12 @@ export default function ProvidersPage() {
     sort_by: "",
     sort_direction: "",
   });
+  const [blockModal, setBlockModal] = useState({
+    open: false,
+    providerId: null,
+    reason: "",
+    duration: "",
+  });
 
   const [filteredProviders, setFilteredProviders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +125,18 @@ export default function ProvidersPage() {
           </Button>
 
           {row.account_status === "active" && (
-            <Button small variant="danger" onClick={() => handleBlock(row.id)}>
+            <Button
+              small
+              variant="danger"
+              onClick={() =>
+                setBlockModal({
+                  open: true,
+                  providerId: row.id,
+                  reason: "",
+                  duration: "",
+                })
+              }
+            >
               حظر
             </Button>
           )}
@@ -181,10 +198,101 @@ export default function ProvidersPage() {
     }
   };
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader />
+
+
+
 
   return (
     <DashboardLayout>
+    
+{blockModal.open && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    }}
+  >
+    <Card style={{ width: "400px", padding: "20px" }}>
+      <h3 style={{ marginBottom: "15px" }}>حظر مقدم الخدمة</h3>
+
+      <label>سبب الحظر</label>
+      <textarea
+        style={{ width: "100%", marginBottom: "15px" }}
+        value={blockModal.reason}
+        onChange={(e) =>
+          setBlockModal((prev) => ({ ...prev, reason: e.target.value }))
+        }
+      />
+
+      <label>مدة الحظر (بالأيام)</label>
+      <input
+        type="number"
+        style={{ width: "100%", marginBottom: "15px" }}
+        value={blockModal.duration}
+        onChange={(e) =>
+          setBlockModal((prev) => ({ ...prev, duration: e.target.value }))
+        }
+      />
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        <Button
+          variant="danger"
+          onClick={async () => {
+            try {
+              await blockProvider(
+                blockModal.providerId,
+                blockModal.reason,
+                blockModal.duration,
+              );
+
+              setFilteredProviders((prev) =>
+                prev.map((p) =>
+                  p.id === blockModal.providerId
+                    ? { ...p, account_status: "blocked" }
+                    : p,
+                ),
+              );
+
+              setBlockModal({
+                open: false,
+                providerId: null,
+                reason: "",
+                duration: "",
+              });
+            } catch {
+              alert("فشل حظر المزود.");
+            }
+          }}
+        >
+          تأكيد الحظر
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() =>
+            setBlockModal({
+              open: false,
+              providerId: null,
+              reason: "",
+              duration: "",
+            })
+          }
+        >
+          إلغاء
+        </Button>
+      </div>
+    </Card>
+  </div>
+)}
       <h2 style={{ marginBottom: "20px" }}>مقدمو الخدمات</h2>
 
       {/* أزرار الصفحات */}
@@ -193,7 +301,7 @@ export default function ProvidersPage() {
           variant="outline"
           onClick={() => navigate("/providers/pending")}
         >
-          طلبات بانتظار الموافقة
+          طلبات بانتظار التحقق
         </Button>
         <Button
           variant="outline"

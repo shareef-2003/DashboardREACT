@@ -23,6 +23,7 @@ import BlockedProvidersPage from "../pages/Providers/BlockedProvidersPage";
 import BlockedProviderDetailsPage from "../pages/Providers/BlockedProviderDetailsPage";
 import MostComplainedPage from "../pages/Providers/MostComplained";
 import CustomersPage from "../pages/Customer";
+import PendingDetailsPage from "../pages/Providers/ProvidersPendingDetailsPage";
 function FallbackRedirect() {
   const { isLoggedIn, user } = useAuthStore();
 
@@ -74,6 +75,8 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/providers/pending/:id" element={<PendingDetailsPage />} />
+
       <Route
         path="/providers/rejected"
         element={

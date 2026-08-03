@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { endpoints } from "./endpoints";
 
 export const getCustomers = async (filters = {}) => {
   const params = new URLSearchParams();
@@ -6,7 +7,9 @@ export const getCustomers = async (filters = {}) => {
   if (filters.area_id) params.append("area_id", filters.area_id);
   if (filters.search) params.append("search", filters.search);
 
-  const response = await api.get(`/admin/customers?${params.toString()}`);
+  const query = params.toString();
+  const url = query ? `/api/admin/customers?${query}` : `/api/admin/customers`;
 
-  return response.data?.data?.data || []; // لأن البيانات داخل data.data
+  const response = await api.get(url);
+  return response.data?.data?.data || [];
 };

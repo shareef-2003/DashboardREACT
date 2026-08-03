@@ -13,55 +13,65 @@ export const getMostActiveProviders = async () => {
   return response.data?.data || [];
 };
 
-export const approveProvider = async (providerId) => {
-  const body = qs.stringify({
-    status: "approved",
-  });
 
-  const response = await api.patch(`api/admin/approval/${providerId}`, body, {
+
+// قبول مقدم الخدمة
+export const approveProvider = async (providerId) => {
+  const body = { status: "approved" };
+
+  const response = await api.patch(`/api/admin/approval/${providerId}`, body, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
   });
 
   return response.data;
 };
 
-// export const rejectProvider = async (providerId, reason) => {
-//   const body = qs.stringify({
-//     status: "rejected",
-//     reason,
-//   });
 
-//   const response = await api.patch(`/admin/approval/${providerId}`, body, {
-//     headers: {
-//       "Content-Type": "application/x-www-form-urlencoded",
-//     },
-//   });
 
-//   return response.data;
-// };
+
+
+
+// رفض مقدم الخدمة (نفس API القبول لكن مع سبب)
+export const rejectProvider = async (providerId, reason) => {
+  const body = {
+    status: "rejected",
+    reason: reason,
+  };
+
+  const response = await api.patch(`/api/admin/approval/${providerId}`, body, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response.data;
+};
+
+
+
+// إعادة النظر
+export const reconsiderProvider = async (providerId, status, reason = null) => {
+  const body = { status, reason };
+
+  const response = await api.patch(`/api/admin/reconsideration/${providerId}`, body, {
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return response.data;
+};
+
+
 
 export const getApprovedProviders = async () => {
   const response = await api.get(endpoints.providers);
   return response.data?.data || [];
 };
 
-export const reconsiderProvider = async (providerId) => {
-  const body = qs.stringify({});
 
-  const response = await api.patch(
-    `admin/reconsideration/${providerId}`,
-    body,
-    {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    },
-  );
 
-  return response.data;
-};
+
 
 export const deleteProvider = async (providerId) => {
   const response = await api.delete(
@@ -78,7 +88,7 @@ export const blockProvider = async (providerId, reason, duration) => {
     duration_in_days: duration,
   });
 
-  const response = await api.patch(`admin/block/${providerId}`, body, {
+  const response = await api.patch(`/api/admin/block/${providerId}`, body, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
@@ -87,10 +97,11 @@ export const blockProvider = async (providerId, reason, duration) => {
   return response.data;
 };
 
+
 export const unblockProvider = async (providerId) => {
   const body = qs.stringify({});
 
-  const response = await api.patch(`/admin/unblock/${providerId}`, body, {
+  const response = await api.patch(`/api/admin/unblock/${providerId}`, body, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
@@ -104,7 +115,7 @@ export const getMostComplainedProviders = async () => {
 };
 
 export const getBlockedProviders = async () => {
-  const response = await api.get("/api/admin/service-providers-blocked");
+  const response = await api.get(endpoints.serviceProvidersBlocked);
   return response.data?.data || [];
 };
 
@@ -151,4 +162,4 @@ export const giveComplimentaryMonth = async (
     `api/admin/service-providers-complimentary-month/${providerId}?subscription_id=${subscriptionId}`,
   );
   return response.data;
-};
+};                               
