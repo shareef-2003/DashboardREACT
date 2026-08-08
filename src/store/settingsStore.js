@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export const useSettingsStore = create((set) => ({
-  name: "مدير النظام",
+  name: "serva_admin",
   email: "admin@serva.com",
   phone: "0550000000",
   language: "ar",

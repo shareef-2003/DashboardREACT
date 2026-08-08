@@ -44,38 +44,31 @@ export default function Sidebar() {
       items: [
         { title: "الزبائن", path: "/customers", icon: <FiUsers /> },
         { title: "مقدمو الخدمات", path: "/providers", icon: <FiList /> },
-        {
-          title: "توثيق المقدميين",
-          path: "/verification",
-          icon: <FiAlertTriangle />,
-        },
       ],
     },
     {
       title: "الخدمات",
       items: [
-        { title: "الطلبات", path: "/orders", icon: <FiFileText /> },
-        { title: "الأنواع", path: "/types", icon: <FiList /> },
+        {
+          title: "عرض أنواع الأعطال",
+          path: "/admin/service-categories",
+          icon: <FiList />,
+        },
       ],
     },
     {
       title: "التفاعل",
-      items: [
-        { title: "المراجعات", path: "/reviews", icon: <FiStar /> },
-        { title: "الشكاوى والدعم", path: "/support", icon: <FiFileText /> },
-      ],
+      items: [],
     },
     {
       title: "النظام",
       items: [
-        {
-          title: "الاشتراكات",
-          path: "/subscriptions",
-          icon: <FiCheckCircle />,
-        },
-        { title: "التقارير", path: "/reports", icon: <FiBarChart2 /> },
         { title: "الإعدادات", path: "/settings", icon: <FiSettings /> },
-        { title: "نطاق المنصة", path: "/platform-scope", icon: <FiMap /> },
+        {
+          title: "المدن والمناطق",
+          path: "/admin/cities-areas",
+          icon: <FiMap />,
+        },
       ],
     },
   ];

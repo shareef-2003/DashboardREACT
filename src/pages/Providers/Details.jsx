@@ -4,7 +4,10 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Loader from "../../components/common/Loader";
-import { getProviderDetails } from "../../services/providersService";
+import {
+  getProviderDetails,
+  giveComplimentaryMonth,
+} from "../../services/providersService";
 
 const statusLabels = {
   active: "نشط",
@@ -46,26 +49,17 @@ export default function ProviderDetailsPage() {
     loadProvider();
   }, [providerId]);
 
+  const handleComplimentaryMonth = async (providerId) => {
+    if (!confirm("هل تريد منح هذا المزود شهراً مجانياً؟")) return;
 
-
-
-const handleComplimentaryMonth = async (providerId) => {
-  if (!confirm("هل تريد منح هذا المزود شهراً مجانياً؟")) return;
-
-  try {
-    const res = await giveComplimentaryMonth(providerId);
-    alert("تم منح شهر مجاني بنجاح");
-  } catch (err) {
-    console.error(err);
-    alert("حدث خطأ أثناء منح الشهر المجاني");
-  }
-};
-
-
-
-
-
-
+    try {
+      const res = await giveComplimentaryMonth(providerId);
+      alert("تم منح شهر مجاني بنجاح");
+    } catch (err) {
+      console.error(err);
+      alert("حدث خطأ أثناء منح الشهر المجاني");
+    }
+  };
 
   const providerName = useMemo(() => {
     if (!provider) return "---";
@@ -209,12 +203,11 @@ const handleComplimentaryMonth = async (providerId) => {
                 </p>
               </div>
               <Button
-  variant="success"
-  onClick={() => handleComplimentaryMonth(provider.id)}
->
-  منح شهر مجاني
-</Button>
-
+                variant="success"
+                onClick={() => handleComplimentaryMonth(provider.id)}
+              >
+                منح شهر مجاني
+              </Button>
             </div>
           </Card>
         </div>

@@ -3,11 +3,14 @@ import { api } from "../../services/api";
 import { endpoints } from "../../services/endpoints";
 import Card from "../../components/common/Card";
 import Loader from "../../components/common/Loader";
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
 
 export default function MostComplainedPage() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +40,17 @@ export default function MostComplainedPage() {
 
   return (
     <Card>
-      <h2 style={{ marginBottom: "20px" }}>الأكثر شكاوى</h2>
+      <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}>
+                <h2 style={{ marginBottom: "20px" }}>الأكثر شكاوى</h2>
+                <Button variant="outline" onClick={() => navigate(-1)}>
+          العودة
+        </Button>
+        </div>
 
       <table
         style={{

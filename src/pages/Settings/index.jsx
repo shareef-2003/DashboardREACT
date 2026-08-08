@@ -61,17 +61,17 @@ export default function SettingsPage() {
             onChange={(e) => setSettingsField("name", e.target.value)}
           />
 
-          <Input
+          {/* <Input
             label="البريد الإلكتروني"
             value={email}
             onChange={(e) => setSettingsField("email", e.target.value)}
-          />
-
+          /> */}
+          {/* 
           <Input
             label="رقم الهاتف"
             value={phone}
             onChange={(e) => setSettingsField("phone", e.target.value)}
-          />
+          /> */}
         </div>
       </Card>
 
@@ -127,9 +127,7 @@ export default function SettingsPage() {
               label="كلمة المرور الحالية"
               type="password"
               value={current_password}
-              onChange={(e) =>
-                setAuthField("current_password", e.target.value)
-              }
+              onChange={(e) => setAuthField("current_password", e.target.value)}
             />
             <Input
               label="كلمة المرور الجديدة"

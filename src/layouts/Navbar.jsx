@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useSettingsStore } from "../store/settingsStore";
-import { BiArrowToBottom, BiMoon, BiSun } from "react-icons/bi";
+import { BiMoon, BiSun } from "react-icons/bi";
 
 export default function Navbar() {
   const { logout, user } = useAuthStore();
@@ -70,7 +70,7 @@ export default function Navbar() {
               fontSize: "14px",
             }}
           >
-            {user?.user_name || "الأدمن"} <BiArrowToBottom />
+            {user?.user_name || "الأدمن"} 
           </div>
 
           {open && (

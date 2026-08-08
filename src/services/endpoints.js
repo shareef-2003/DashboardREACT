@@ -9,15 +9,9 @@ export const endpoints = {
   customers: "/api/admin/customers",
   serviceProvidersBlocked: "/api/admin/service-providers-blocked",
 
-  users: "/users",
-  orders: "/orders",
-  reports: "/reports",
-  categories: "/categories",
-  reviews: "/reviews",
-  notifications: "/notifications",
-  support: "/support",
-  subscriptions: "/subscriptions",
-  verification: "/verification",
-  offers: "/offers",
-  moderation: "/moderation",
+
+
+  customers: "/api/admin/customers",
+  customersBlocked: "/api/admin/customers-blocked",
+  serviceProvidersBlocked: "/api/admin/service-providers-blocked",
 };

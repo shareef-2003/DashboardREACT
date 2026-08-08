@@ -6,17 +6,10 @@ import Dashboard from "../pages/Dashboard";
 import UsersPage from "../pages/Customer";
 import ProvidersPage from "../pages/Providers";
 import ProviderDetailsPage from "../pages/Providers/Details";
-import OrdersPage from "../pages/Orders";
-import ReportsPage from "../pages/Reports";
 import SettingsPage from "../pages/Settings";
-import TypesPage from "../pages/Types";
-import ReviewsPage from "../pages/Reviews";
-import SupportPage from "../pages/Support";
 import SubscriptionsReport from "../pages/Providers/SubscriptionsReport";
 import MostActiveProviders from "../pages/Providers/MostActive";
-import VerificationPage from "../pages/Verification";
 import PendingProvidersPage from "../pages/Providers/PendingProvidersPage";
-import PlatformScopePage from "../pages/PlatformScope";
 import RejectedProvidersPage from "../pages/Providers/RejectedProvidersPage";
 import RejectedProviderDetailsPage from "../pages/Providers/RejectedProviderDetailsPage";
 import BlockedProvidersPage from "../pages/Providers/BlockedProvidersPage";
@@ -24,6 +17,22 @@ import BlockedProviderDetailsPage from "../pages/Providers/BlockedProviderDetail
 import MostComplainedPage from "../pages/Providers/MostComplained";
 import CustomersPage from "../pages/Customer";
 import PendingDetailsPage from "../pages/Providers/ProvidersPendingDetailsPage";
+import BlockedCustomersPage from "../pages/Customer/BlockedCustomersPage";
+import ReviewsPage from "../pages/Reviews/ReviewsPage";
+import BlockedProvidersByCustomerPage from "../pages/Customer/BlockedProvidersByCustomerPage";
+import StatsCustomersGrowthPage from "../pages/Stats/StatsCustomersGrowthPage";
+import StatsServiceRequestsGrowthPage from "../pages/Stats/StatsServiceRequestsGrowthPage";
+import CitiesAreasPage from "../pages/Areas/CitiesAreasPage";
+import AddCityPage from "../pages/Areas/AddCityPage";
+import HotAreasPage from "../pages/Areas/HotAreasPage";
+import HotAreaMapPage from "../pages/Areas/HotAreaMapPage";
+import ComplaintsAreasPage from "../pages/Areas/ComplaintsAreasPage";
+import ProviderDistributionPage from "../pages/Areas/ProviderDistributionPage";
+import GeographicGrowthPage from "../pages/Areas/GeographicGrowthPage";
+import SupplyDemandPage from "../pages/Areas/SupplyDemandPage";
+import PriceTrendPage from "../pages/Areas/PriceTrendPage";
+import PriceComparisonPage from "../pages/Areas/PriceComparisonPage";
+import ServiceCategoriesPage from "../pages/Categories/ServiceCategoriesPage";
 function FallbackRedirect() {
   const { isLoggedIn, user } = useAuthStore();
 
@@ -41,7 +50,14 @@ function FallbackRedirect() {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={
+          <ProtectedRoute>
+            <LoginPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/"
@@ -128,13 +144,47 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/orders"
+        path="/admin/customers-blocked"
         element={
           <ProtectedRoute>
-            <OrdersPage />
+            <BlockedCustomersPage />
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedRoute>
+            <ReviewsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/stats/customers-growth"
+        element={
+          <ProtectedRoute>
+            <StatsCustomersGrowthPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/stats/service-requests-growth"
+        element={
+          <ProtectedRoute>
+            <StatsServiceRequestsGrowthPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/blocked-providers-by-customer/:customerId"
+        element={
+          <ProtectedRoute>
+            <BlockedProvidersByCustomerPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/providers/most-complained"
         element={<MostComplainedPage />}
@@ -149,14 +199,6 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/reports"
-        element={
-          <ProtectedRoute>
-            <ReportsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/settings"
         element={
           <ProtectedRoute>
@@ -164,47 +206,105 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/types"
-        element={
-          <ProtectedRoute>
-            <TypesPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/reviews"
-        element={
-          <ProtectedRoute>
-            <ReviewsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/support"
-        element={
-          <ProtectedRoute>
-            <SupportPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/verification"
-        element={
-          <ProtectedRoute>
-            <VerificationPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/platform-scope"
-        element={
-          <ProtectedRoute>
-            <PlatformScopePage />
-          </ProtectedRoute>
-        }
-      />
+
       <Route path="*" element={<FallbackRedirect />} />
+      <Route
+        path="/admin/cities-areas"
+        element={
+          <ProtectedRoute>
+            <CitiesAreasPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/cities/add"
+        element={
+          <ProtectedRoute>
+            <AddCityPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/hot-areas"
+        element={
+          <ProtectedRoute>
+            <HotAreasPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/complaints-areas"
+        element={
+          <ProtectedRoute>
+            <ComplaintsAreasPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/provider-distribution"
+        element={
+          <ProtectedRoute>
+            <ProviderDistributionPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/geographic-growth"
+        element={
+          <ProtectedRoute>
+            <GeographicGrowthPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/supply-demand"
+        element={
+          <ProtectedRoute>
+            <SupplyDemandPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/hot-area-map"
+        element={
+          <ProtectedRoute>
+            <HotAreaMapPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/price-trend"
+        element={
+          <ProtectedRoute>
+            <PriceTrendPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/price-comparison"
+        element={
+          <ProtectedRoute>
+            <PriceComparisonPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/service-categories"
+        element={
+          <ProtectedRoute>
+            <ServiceCategoriesPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
