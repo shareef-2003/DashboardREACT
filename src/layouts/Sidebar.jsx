@@ -16,7 +16,9 @@ import {
   FiTag,
   FiLayers,
   FiMap,
+  FiUserMinus,
 } from "react-icons/fi";
+import { BsFilePerson } from "react-icons/bs";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
@@ -37,13 +39,13 @@ export default function Sidebar() {
   const sections = [
     {
       title: "الرئيسية",
-      items: [{ title: "لوحة التحكم", path: "/", icon: <FiHome /> }],
+      items: [{ title: "الرئيسية", path: "/", icon: <FiHome /> }],
     },
     {
       title: "إدارة المستخدمين",
       items: [
         { title: "الزبائن", path: "/customers", icon: <FiUsers /> },
-        { title: "مقدمو الخدمات", path: "/providers", icon: <FiList /> },
+        { title: "مقدمو الخدمات", path: "/providers", icon: <FiUserMinus /> },
       ],
     },
     {
@@ -60,6 +62,18 @@ export default function Sidebar() {
       title: "التفاعل",
       items: [],
     },
+
+    {
+      title: "الاشتراكات",
+      items: [
+        {
+          title: "خطط الاشتراك",
+          path: "/admin/subscription-plans",
+          icon: <FiLayers />,
+        },
+      ],
+    },
+
     {
       title: "النظام",
       items: [

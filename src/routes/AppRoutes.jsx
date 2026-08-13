@@ -33,6 +33,12 @@ import SupplyDemandPage from "../pages/Areas/SupplyDemandPage";
 import PriceTrendPage from "../pages/Areas/PriceTrendPage";
 import PriceComparisonPage from "../pages/Areas/PriceComparisonPage";
 import ServiceCategoriesPage from "../pages/Categories/ServiceCategoriesPage";
+import SubscriptionsPage from "../pages/Subscriptions/SubscriptionsPage";
+import SubscriptionDetailsPage from "../pages/subscriptions/SubscriptionDetailsPage";
+import ProviderSubscriptionsPage from "../pages/Subscriptions/ProviderSubscriptionsPage";
+import ProviderSubscriptionDetailsPage from "../pages/Subscriptions/ProviderSubscriptionDetailsPage";
+import PlatformRevenueStatsPage from "../pages/stats/PlatformRevenueStatsPage";
+
 function FallbackRedirect() {
   const { isLoggedIn, user } = useAuthStore();
 
@@ -50,14 +56,7 @@ function FallbackRedirect() {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={
-          <ProtectedRoute>
-            <LoginPage />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/login" element={<LoginPage />} />
 
       <Route
         path="/"
@@ -302,6 +301,49 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <ServiceCategoriesPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/subscription-plans"
+        element={
+          <ProtectedRoute>
+            <SubscriptionsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/subscription-plans/:id"
+        element={
+          <ProtectedRoute>
+            <SubscriptionDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/provider-subscriptions"
+        element={
+          <ProtectedRoute>
+            <ProviderSubscriptionsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/provider-subscriptions/:id"
+        element={
+          <ProtectedRoute>
+            <ProviderSubscriptionDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/stats/subscriptions-revenue"
+        element={
+          <ProtectedRoute>
+            <PlatformRevenueStatsPage />
           </ProtectedRoute>
         }
       />

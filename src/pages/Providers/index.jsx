@@ -47,19 +47,18 @@ export default function ProvidersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [cities, setCities] = useState([]);
-const [areas, setAreas] = useState([]);
+  const [areas, setAreas] = useState([]);
 
-const loadCitiesAndAreas = async () => {
-  const data = await getCitiesWithAreas();
-  setCities(data);
+  const loadCitiesAndAreas = async () => {
+    const data = await getCitiesWithAreas();
+    setCities(data);
 
-  const allAreas = data.flatMap(city => city.areas);
-  setAreas(allAreas);
-};
-useEffect(() => {
-  loadCitiesAndAreas();
-}, []);
-
+    const allAreas = data.flatMap((city) => city.areas);
+    setAreas(allAreas);
+  };
+  useEffect(() => {
+    loadCitiesAndAreas();
+  }, []);
 
   const loadFiltered = async () => {
     try {
@@ -184,31 +183,36 @@ useEffect(() => {
     try {
       await deleteProvider(id);
       setFilteredProviders((prev) => prev.filter((p) => p.id !== id));
-    } catch {
-      alert("فشل حذف المزود.");
+    } catch (err) {
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.errors?.provider?.[0] ||
+        "فشل حذف المزود.";
+
+      alert(backendMessage);
     }
   };
 
- const handleBlock = async (id) => {
-  try {
-    await blockProvider(id);
+  const handleBlock = async (id) => {
+    try {
+      await blockProvider(id);
 
-    // تحديث حالة المزود في الواجهة
-    setFilteredProviders((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, account_status: "blocked" } : p
-      )
-    );
+      // تحديث حالة المزود في الواجهة
+      setFilteredProviders((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, account_status: "blocked" } : p,
+        ),
+      );
 
-    alert("تم حظر المزود بنجاح.");
-  } catch (error) {
-    const backendMessage =
-      error.response?.data?.message || "حدث خطأ أثناء حظر المزود";
+      alert("تم حظر المزود بنجاح.");
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.message || "حدث خطأ أثناء حظر المزود";
 
-    alert(backendMessage);
-  }
-};
-
+      alert(backendMessage);
+    }
+  };
 
   const handleUnblock = async (id) => {
     try {
@@ -221,207 +225,202 @@ useEffect(() => {
     }
   };
 
-  if (loading) return <Loader />
-
-
-
+  if (loading) return <Loader />;
 
   return (
     <DashboardLayout>
-    
-{blockModal.open && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.5)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 9999,
-    }}
-  >
-    <Card style={{ width: "400px", padding: "20px" }}>
-      <h3 style={{ marginBottom: "15px" }}>حظر مقدم الخدمة</h3>
+      {blockModal.open && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <Card style={{ width: "400px", padding: "20px" }}>
+            <h3 style={{ marginBottom: "15px" }}>حظر مقدم الخدمة</h3>
 
-      <label>سبب الحظر</label>
-      <textarea
-          style={{ width: "100%", marginBottom: "15px" }}
-          value={blockModal.reason}
-          onChange={(e) =>
-            setBlockModal((prev) => ({ ...prev, reason: e.target.value }))
-          }
-        />
-
-        <label>مدة الحظر (بالأيام)</label>
-        <input
-          type="number"
-          style={{ width: "100%", marginBottom: "15px" }}
-          value={blockModal.duration}
-          onChange={(e) =>
-            setBlockModal((prev) => ({ ...prev, duration: e.target.value }))
-          }
-        />
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Button
-            variant="danger"
-            onClick={async () => {
-              try {
-                await blockProvider(
-                  blockModal.providerId,
-                  blockModal.reason,
-                  blockModal.duration,
-                );
-
-                setFilteredProviders((prev) =>
-                  prev.map((p) =>
-                    p.id === blockModal.providerId
-                      ? { ...p, account_status: "blocked" }
-                      : p,
-                  ),
-                );
-
-                setBlockModal({
-                  open: false,
-                  providerId: null,
-                  reason: "",
-                  duration: "",
-                });
-              } catch {
-                alert("فشل حظر المزود.");
+            <label>سبب الحظر</label>
+            <textarea
+              style={{ width: "100%", marginBottom: "15px" }}
+              value={blockModal.reason}
+              onChange={(e) =>
+                setBlockModal((prev) => ({ ...prev, reason: e.target.value }))
               }
-            }}
-          >
-            تأكيد الحظر
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() =>
-              setBlockModal({
-                open: false,
-                providerId: null,
-                reason: "",
-                duration: "",
-              })
-            }
-          >
-            إلغاء
-          </Button>
-        </div>
-      </Card>
-    </div>
-  )}
-        <h2 style={{ marginBottom: "20px" }}>مقدمو الخدمات</h2>
-
-        {/* أزرار الصفحات */}
-        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/pending")}
-          >
-            طلبات بانتظار التحقق
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/rejected")}
-          >
-            المزودون المرفوضون
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/blocked")}
-          >
-            المزودون المحظورون
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/subscriptions-report")}
-          >
-            تقرير الاشتراكات
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/most-active")}
-          >
-            الأكثر نشاطًا هذا الشهر
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/providers/most-complained")}
-          >
-            الأكثر شكاوى
-          </Button>
-        </div>
-
-        {/* الإحصائيات */}
-        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-          <Card>
-            <h4>إجمالي مقدمي الخدمة</h4>
-            <p>{totalProviders}</p>
-          </Card>
-
-          <Card>
-            <h4>المزودون النشطون</h4>
-            <p>{activeProvidersCount}</p>
-          </Card>
-
-          <Card>
-            <h4>المزودون المشتركين</h4>
-            <p>{subscribedProvidersCount}</p>
-          </Card>
-        </div>
-
-        {/* الفلاتر */}
-        <Card style={{ marginBottom: "20px" }}>
-          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-          <select
-  onChange={(e) => updateFilter("area_id", e.target.value)}
-  style={{ padding: "10px" }}
->
-  <option value="">اختر المنطقة</option>
-
-  {areas.map((area) => (
-    <option key={area.id} value={area.id}>
-      {area.city} - {area.area_name}
-    </option>
-  ))}
-</select>
-
-
-            <select onChange={(e) => updateFilter("category_id", e.target.value)}>
-              <option value="">اختر التصنيف</option>
-              <option value="6">النظافة الشاملة</option>
-              <option value="7">النجارة</option>
-            </select>
-
-            <select
-              onChange={(e) => updateFilter("subscription_id", e.target.value)}
-            >
-              <option value="">نوع الاشتراك</option>
-              <option value="1">مجاني</option>
-              <option value="2">مدفوع</option>
-            </select>
-
-            <input
-              type="text"
-              placeholder="ابحث بالاسم"
-              onChange={(e) => updateFilter("search", e.target.value)}
             />
-          </div>
+
+            <label>مدة الحظر (بالأيام)</label>
+            <input
+              type="number"
+              style={{ width: "100%", marginBottom: "15px" }}
+              value={blockModal.duration}
+              onChange={(e) =>
+                setBlockModal((prev) => ({ ...prev, duration: e.target.value }))
+              }
+            />
+
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Button
+                variant="danger"
+                onClick={async () => {
+                  try {
+                    await blockProvider(
+                      blockModal.providerId,
+                      blockModal.reason,
+                      blockModal.duration,
+                    );
+
+                    setFilteredProviders((prev) =>
+                      prev.map((p) =>
+                        p.id === blockModal.providerId
+                          ? { ...p, account_status: "blocked" }
+                          : p,
+                      ),
+                    );
+
+                    setBlockModal({
+                      open: false,
+                      providerId: null,
+                      reason: "",
+                      duration: "",
+                    });
+                  } catch {
+                    alert("فشل حظر المزود.");
+                  }
+                }}
+              >
+                تأكيد الحظر
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setBlockModal({
+                    open: false,
+                    providerId: null,
+                    reason: "",
+                    duration: "",
+                  })
+                }
+              >
+                إلغاء
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+      <h2 style={{ marginBottom: "20px" }}>مقدمو الخدمات</h2>
+
+      {/* أزرار الصفحات */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/pending")}
+        >
+          طلبات بانتظار التحقق
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/rejected")}
+        >
+          المزودون المرفوضون
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/blocked")}
+        >
+          المزودون المحظورون
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/subscriptions-report")}
+        >
+          تقرير الاشتراكات
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/most-active")}
+        >
+          الأكثر نشاطًا هذا الشهر
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate("/providers/most-complained")}
+        >
+          الأكثر شكاوى
+        </Button>
+      </div>
+
+      {/* الإحصائيات */}
+      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+        <Card>
+          <h4>إجمالي مقدمي الخدمة</h4>
+          <p>{totalProviders}</p>
         </Card>
 
-        {error && (
-          <Card style={{ marginBottom: "20px", color: "var(--danger)" }}>
-            {error}
-          </Card>
-        )}
+        <Card>
+          <h4>المزودون النشطون</h4>
+          <p>{activeProvidersCount}</p>
+        </Card>
 
-        <Table columns={columns} data={filteredProviders} />
-      </DashboardLayout>
-    );
-  }
+        <Card>
+          <h4>المزودون المشتركين</h4>
+          <p>{subscribedProvidersCount}</p>
+        </Card>
+      </div>
+
+      {/* الفلاتر */}
+      <Card style={{ marginBottom: "20px" }}>
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+          <select
+            onChange={(e) => updateFilter("area_id", e.target.value)}
+            style={{ padding: "10px" }}
+          >
+            <option value="">اختر المنطقة</option>
+
+            {areas.map((area) => (
+              <option key={area.id} value={area.id}>
+                {area.city} - {area.area_name}
+              </option>
+            ))}
+          </select>
+
+          <select onChange={(e) => updateFilter("category_id", e.target.value)}>
+            <option value="">اختر التصنيف</option>
+            <option value="6">النظافة الشاملة</option>
+            <option value="7">النجارة</option>
+          </select>
+
+          <select
+            onChange={(e) => updateFilter("subscription_id", e.target.value)}
+          >
+            <option value="">نوع الاشتراك</option>
+            <option value="1">مجاني</option>
+            <option value="2">مدفوع</option>
+          </select>
+
+          <input
+            type="text"
+            placeholder="ابحث بالاسم"
+            onChange={(e) => updateFilter("search", e.target.value)}
+          />
+        </div>
+      </Card>
+
+      {error && (
+        <Card style={{ marginBottom: "20px", color: "var(--danger)" }}>
+          {error}
+        </Card>
+      )}
+
+      <Table columns={columns} data={filteredProviders} />
+    </DashboardLayout>
+  );
+}

@@ -71,19 +71,17 @@ export const updateServiceCategory = async (id, data) => {
   return response.data?.data;
 };
 
-
-
 export const deleteServiceCategory = async (id) => {
   const response = await api.delete(`/api/admin/service-categories/${id}`);
   return response.data;
 };
 
-
 export const getProviderDistributionStats = async () => {
-  const response = await api.get("/api/admin/service-categories/stats/provider-distribution");
+  const response = await api.get(
+    "/api/admin/service-categories/stats/provider-distribution",
+  );
   return response.data?.data;
 };
-
 
 export const getMostRequestedCategories = async (areaId = null) => {
   const params = {};
@@ -92,12 +90,11 @@ export const getMostRequestedCategories = async (areaId = null) => {
 
   const response = await api.get(
     "/api/admin/service-categories/stats/most-requested",
-    { params }
+    { params },
   );
 
   return response.data?.data;
 };
-
 
 export const getAreas = async () => {
   const response = await api.get("/api/admin/cities");
@@ -106,9 +103,7 @@ export const getAreas = async () => {
   const cities = response.data?.data?.data || [];
 
   // دمج كل المناطق من كل المدن (لو كان لديك أكثر من مدينة لاحقاً)
-  const allAreas = cities.flatMap(city => city.areas);
+  const allAreas = cities.flatMap((city) => city.areas);
 
   return allAreas;
 };
-
-

@@ -57,7 +57,14 @@ export default function ProviderDetailsPage() {
       alert("تم منح شهر مجاني بنجاح");
     } catch (err) {
       console.error(err);
-      alert("حدث خطأ أثناء منح الشهر المجاني");
+
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.errors?.provider?.[0] ||
+        "حدث خطأ أثناء منح الشهر المجاني";
+
+      alert(backendMessage);
     }
   };
 

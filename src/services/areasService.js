@@ -1,5 +1,18 @@
 import { api } from "./api";
 
+
+export const getCitiesDropdown = async () => {
+  const response = await api.get("/api/admin/cities/dropdown");
+  return response.data?.data || [];
+};
+
+
+
+
+
+  
+
+
 export const getCitiesWithAreas = async () => {
   const response = await api.get("/api/admin/cities");
   return response.data?.data?.data || [];

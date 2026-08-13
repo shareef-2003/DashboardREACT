@@ -1,30 +1,78 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-export default function LineChart({ data, seriesName = "القيم" }) {
-  const categories = data?.labels ?? [];
-  const normalizedSeries = Array.isArray(data?.series)
-    ? data.series
-    : [{ name: seriesName, data: data?.values ?? [] }];
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+);
+
+export default function LineChart({ data }) {
+  // اكتشاف الوضع الداكن من الـ body
+  const isDark = document.body.classList.contains("dark");
+
+  const axisColor = isDark ? "#c7baba" : "#bbacacab"; // لون المحاور
+  const gridColor = isDark ? "rgb(255, 255, 255)" : "rgba(104, 98, 98, 0.37)"; // لون الشبكة
 
   const options = {
-    chart: {
-      id: "line-chart",
-      toolbar: { show: false },
-      fontFamily: "Tajawal, sans-serif",
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: axisColor,
+        },
+      },
+      tooltip: {
+        titleColor: axisColor,
+        bodyColor: axisColor,
+      },
     },
-    xaxis: { categories },
-    stroke: { curve: "smooth", width: 2 },
-    colors: ["#4338ca"],
-    tooltip: { theme: "light" },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "الشهر",
+          color: axisColor,
+        },
+        ticks: {
+          color: axisColor,
+        },
+        grid: {
+          color: gridColor,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "عدد الطلبات",
+          color: axisColor,
+        },
+        ticks: {
+          color: axisColor,
+        },
+        grid: {
+          color: gridColor,
+        },
+        beginAtZero: true,
+      },
+    },
   };
 
   return (
-    <Chart
-      options={options}
-      series={normalizedSeries}
-      type="line"
-      height={280}
-    />
+    <div style={{ height: "300px" }}>
+      <Line data={data} options={options} />
+    </div>
   );
 }

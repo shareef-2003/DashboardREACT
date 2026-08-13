@@ -104,12 +104,16 @@ export default function HotAreaMapPage() {
         <h3 style={{ marginBottom: "15px" }}>الخريطة الحرارية</h3>
 
         <MapContainer
-          center={[33.5138, 36.2765]} // دمشق
+          center={[33.5138, 36.2765]}
           zoom={13}
           whenCreated={(map) => (mapRef.current = map)}
           style={{ height: "600px", width: "100%" }}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+          {mapRef.current && (
+            <HeatmapLayer map={mapRef.current} points={points} />
+          )}
         </MapContainer>
       </Card>
     </DashboardLayout>

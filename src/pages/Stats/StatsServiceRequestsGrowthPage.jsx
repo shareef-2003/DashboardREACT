@@ -16,13 +16,20 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+);
 
 export default function StatsServiceRequestsGrowthPage() {
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState({
-    year: "",
+    year: new Date().getFullYear(),
     request_type: "",
     service_category_id: "",
   });
@@ -69,15 +76,22 @@ export default function StatsServiceRequestsGrowthPage() {
 
   return (
     <DashboardLayout>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "20px",
+        }}
+      >
         <h2>إحصائيات نمو الطلبات</h2>
-        <Button variant="outline" onClick={() => navigate(-1)}>العودة</Button>
+        <Button variant="outline" onClick={() => navigate(-1)}>
+          العودة
+        </Button>
       </div>
 
       {/* Filters */}
       <Card style={{ marginBottom: "20px" }}>
         <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-          
           <input
             type="number"
             placeholder="السنة (مثال: 2026)"
@@ -95,7 +109,9 @@ export default function StatsServiceRequestsGrowthPage() {
           </select>
 
           <select
-            onChange={(e) => updateFilter("service_category_id", e.target.value)}
+            onChange={(e) =>
+              updateFilter("service_category_id", e.target.value)
+            }
             style={{ padding: "10px" }}
           >
             <option value="">نوع العطل</option>
@@ -121,15 +137,23 @@ export default function StatsServiceRequestsGrowthPage() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "#f1f1f1" }}>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>الشهر</th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>عدد الطلبات</th>
+              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                الشهر
+              </th>
+              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                عدد الطلبات
+              </th>
             </tr>
           </thead>
           <tbody>
             {stats.map((item, index) => (
               <tr key={index}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>{item.month}</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>{item.count}</td>
+                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  {item.month}
+                </td>
+                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  {item.count}
+                </td>
               </tr>
             ))}
           </tbody>

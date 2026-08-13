@@ -7,23 +7,69 @@ import Button from "../../components/common/Button";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import { deleteCustomer, blockCustomer } from "../../services/customerService";
+import { getCitiesDropdown } from "../../services/areasService";
 
 export default function CustomersPage() {
   const [filters, setFilters] = useState({
-    area_id: "",
+    city: "",
     joined_from: "",
     joined_to: "",
   });
 
+  const [cities, setCities] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   const [blockModal, setBlockModal] = useState({
     open: false,
     customer: null,
     reason: "",
     duration: "",
   });
+
+  const [apply, setApply] = useState(false);
+
+  // تحميل المدن
+  const loadCities = async () => {
+    try {
+      const data = await getCitiesDropdown();
+      setCities(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // تحميل الزبائن
+  const loadCustomers = async () => {
+    setLoading(true);
+    try {
+      const data = await getCustomers(filters);
+
+      // فلترة حسب المدينة داخل الواجهة
+      const filtered = filters.city
+        ? data.filter((c) => c.area?.city === filters.city)
+        : data;
+
+      setCustomers(filtered);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCities();
+    loadCustomers();
+  }, [apply]);
+
+  const updateFilter = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const applyFilters = () => {
+    setApply((prev) => !prev);
+  };
+
   const openBlockModal = (customer) => {
     setBlockModal({
       open: true,
@@ -33,56 +79,18 @@ export default function CustomersPage() {
     });
   };
 
-  const loadCustomers = async () => {
-    setLoading(true);
-    try {
-      const data = await getCustomers(filters);
-      setCustomers(data);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDelete = async (id) => {
     if (!confirm("هل أنت متأكد من حذف هذا الزبون؟")) return;
 
     try {
       await deleteCustomer(id);
-
       alert("تم حذف الزبون بنجاح.");
-      loadCustomers(); // إعادة تحميل القائمة بعد الحذف
+      loadCustomers();
     } catch (error) {
       const backendMessage =
         error.response?.data?.message || "حدث خطأ أثناء حذف الزبون";
-
       alert(backendMessage);
     }
-  };
-
-  const [apply, setApply] = useState(false);
-
-  const handleBlockCustomer = async () => {
-    try {
-      await blockCustomer(customerId, reason, duration);
-      alert("تم حظر المستخدم بنجاح");
-    } catch (error) {
-      const backendMessage =
-        error.response?.data?.message || "حدث خطأ أثناء تنفيذ عملية الحظر";
-
-      alert(backendMessage);
-    }
-  };
-
-  useEffect(() => {
-    loadCustomers(); // تحميل أولي عند فتح الصفحة
-  }, [apply]);
-
-  const updateFilter = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const applyFilters = () => {
-    setApply((prev) => !prev); // تغيير القيمة لتحفيز useEffect
   };
 
   const columns = [
@@ -115,7 +123,6 @@ export default function CustomersPage() {
           <Button
             variant="danger"
             disabled={row.status === "blocked"}
-            // الزبون محظور؟ اجعل الزر غير فعال
             onClick={() => openBlockModal(row)}
           >
             حظر
@@ -124,6 +131,7 @@ export default function CustomersPage() {
           <Button variant="danger" onClick={() => handleDelete(row.id)}>
             حذف
           </Button>
+
           <Button
             variant="outline"
             onClick={() =>
@@ -141,6 +149,7 @@ export default function CustomersPage() {
 
   return (
     <DashboardLayout>
+      {/* نافذة الحظر */}
       {blockModal.open && (
         <div
           style={{
@@ -205,7 +214,6 @@ export default function CustomersPage() {
                     const backendMessage =
                       error.response?.data?.message ||
                       "حدث خطأ أثناء تنفيذ عملية الحظر";
-
                     alert(backendMessage);
                   }
                 }}
@@ -231,6 +239,7 @@ export default function CustomersPage() {
         </div>
       )}
 
+      {/* العنوان والأزرار */}
       <div
         style={{
           display: "flex",
@@ -239,21 +248,25 @@ export default function CustomersPage() {
         }}
       >
         <h2>الزبائن</h2>
+
         <Button
           variant="outline"
           onClick={() => navigate("/admin/customers-blocked")}
         >
           الزبائن المحظورين
         </Button>
+
         <Button variant="outline" onClick={() => navigate("/admin/reviews")}>
           تقييمات الزبائن
         </Button>
+
         <Button
           variant="outline"
           onClick={() => navigate("/admin/stats/customers-growth")}
         >
           إحصائيات نمو الزبائن
         </Button>
+
         <Button
           variant="outline"
           onClick={() => navigate("/admin/stats/service-requests-growth")}
@@ -266,18 +279,21 @@ export default function CustomersPage() {
         </Button>
       </div>
 
+      {/* الفلاتر */}
       <Card style={{ marginBottom: "20px" }}>
         <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
           <select
-            onChange={(e) => updateFilter("area_id", e.target.value)}
-            style={{ padding: "10px" }}
+            value={filters.city} // ← مهم جداً
+            onChange={(e) => updateFilter("city", e.target.value)}
+            style={{ padding: "10px", minWidth: "200px" }}
           >
-            <option value="">اختر المنطقة</option>
-            <option value="11">بستان الدور</option>
-            <option value="12">القصاع</option>
-            <option value="13">مشروع دمر</option>
-            <option value="14">الشعلان</option>
-            <option value="15">أبو رمانة</option>
+            <option value="">كل المدن</option>
+
+            {cities.map((city, index) => (
+              <option key={index} value={city}>
+                {city}
+              </option>
+            ))}
           </select>
 
           <input
@@ -296,6 +312,7 @@ export default function CustomersPage() {
         </div>
       </Card>
 
+      {/* الجدول */}
       <Table columns={columns} data={customers} />
     </DashboardLayout>
   );

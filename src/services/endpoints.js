@@ -8,6 +8,7 @@ export const endpoints = {
   mostComplained: "/api/admin/most-complained",
   customers: "/api/admin/customers",
   serviceProvidersBlocked: "/api/admin/service-providers-blocked",
+subscriptionPlans: "/api/admin/subscription-plans",
 
 
 

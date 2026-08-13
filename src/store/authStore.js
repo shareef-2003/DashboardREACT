@@ -212,16 +212,13 @@ api.interceptors.response.use(
 
       if (hadSession) {
         clearAuth();
-        useAuthStore.setState({
-          user_name: "",
-          password: "",
-          isLoggedIn: false,
-          user: null,
-          token: null,
-          initialLoading: false,
-          loading: false,
-          error: "",
-        });
+        clearAuth();
+
+        // لا تعمل setState هنا نهائياً
+        // فقط أعد التوجيه
+        if (window.location.pathname !== "/login") {
+          window.location.replace("/login?session=expired");
+        }
 
         if (window.location.pathname !== "/login") {
           window.location.replace("/login?session=expired");
