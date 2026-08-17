@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate(user?.must_change_password ? "/settings" : "/", {
+      navigate(user?.must_change_password ? "/settings" : "/dashboard", {
         replace: true,
       });
     }
@@ -37,7 +37,9 @@ export default function LoginPage() {
     if (success) {
       const mustChangePassword =
         useAuthStore.getState().user?.must_change_password;
-      navigate(mustChangePassword ? "/settings" : "/", { replace: true });
+      navigate(mustChangePassword ? "/settings" : "/dashboard", {
+        replace: true,
+      });
     }
   };
 

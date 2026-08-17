@@ -39,33 +39,35 @@ import ProviderSubscriptionsPage from "../pages/Subscriptions/ProviderSubscripti
 import ProviderSubscriptionDetailsPage from "../pages/Subscriptions/ProviderSubscriptionDetailsPage";
 import PlatformRevenueStatsPage from "../pages/stats/PlatformRevenueStatsPage";
 
-function FallbackRedirect() {
-  const { isLoggedIn, user } = useAuthStore();
+// function FallbackRedirect() {
+//   const { isLoggedIn, user } = useAuthStore();
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
+//   if (!isLoggedIn) {
+//     return <Navigate to="/login" replace />;
+//   }
 
-  if (user?.must_change_password) {
-    return <Navigate to="/settings" replace />;
-  }
+//   if (user?.must_change_password) {
+//     return <Navigate to="/settings" replace />;
+//   }
 
-  return <Navigate to="/login" replace />;
-}
+//   return <Navigate to="/login" replace />;
+// }
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
 
+      <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/users"
         element={
@@ -206,7 +208,6 @@ export default function AppRoutes() {
         }
       />
 
-      <Route path="*" element={<FallbackRedirect />} />
       <Route
         path="/admin/cities-areas"
         element={
