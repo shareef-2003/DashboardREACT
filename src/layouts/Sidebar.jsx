@@ -58,10 +58,7 @@ export default function Sidebar() {
         },
       ],
     },
-    {
-      title: "التفاعل",
-      items: [],
-    },
+  
 
     {
       title: "الاشتراكات",
